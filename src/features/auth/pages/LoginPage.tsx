@@ -1,27 +1,57 @@
+import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export function LoginPage() {
   const navigate = useNavigate()
 
-  const handleLogin = () => {
+  const handleLogin = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     localStorage.setItem('accessToken', 'dummy-admin-token')
     navigate('/admin', { replace: true })
   }
 
   return (
-    <main className="min-h-screen bg-zinc-50 p-8 text-zinc-900">
-      <h1 className="text-2xl font-semibold">Admin Login</h1>
-      <p className="mt-2 text-zinc-600">로그인이 필요한 페이지입니다.</p>
+    <main className="app-page flex items-center justify-center">
+      <section className="surface w-full max-w-md p-6 md:p-8">
+        <h1 className="page-title auth-title">
+          <span className="auth-title-main">BETA</span>
+          <span className="auth-title-sub">Admin Login</span>
+        </h1>
 
-      <div className="mt-6">
-        <button
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-50"
-          onClick={handleLogin}
-          type="button"
-        >
-          테스트 로그인
-        </button>
-      </div>
+        <form className="mt-6 space-y-4" onSubmit={handleLogin}>
+          <div>
+            <label className="form-label" htmlFor="login-id">
+              ID
+            </label>
+            <input
+              autoComplete="username"
+              className="input-base"
+              id="login-id"
+              name="loginId"
+              placeholder="아이디를 입력하세요"
+              type="text"
+            />
+          </div>
+
+          <div>
+            <label className="form-label" htmlFor="login-password">
+              Password
+            </label>
+            <input
+              autoComplete="current-password"
+              className="input-base"
+              id="login-password"
+              name="password"
+              placeholder="비밀번호를 입력하세요"
+              type="password"
+            />
+          </div>
+
+          <button className="btn-base btn-lg btn-primary w-full" type="submit">
+            테스트 로그인
+          </button>
+        </form>
+      </section>
     </main>
   )
 }
