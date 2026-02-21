@@ -1,6 +1,6 @@
 # BETA-Admin-Web
 
-관리자용 웹 프론트엔드 저장소입니다.
+BETA 관리자용 웹 프론트엔드 레포지토리 입니다.
 
 ## Tech Stack
 - React 19
