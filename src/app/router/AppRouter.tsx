@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { RequireAuth } from './RequireAuth'
 import { RootRedirect } from './RootRedirect'
-import { DashboardPage } from '../../features/admin/pages/DashboardPage'
-import { LoginPage } from '../../features/auth/pages/LoginPage'
+import { DashboardPage } from '@features/admin/pages/DashboardPage'
+import { LoginPage } from '@features/auth/pages/LoginPage'
 
 export function AppRouter() {
   return (
@@ -21,4 +21,3 @@ export function AppRouter() {
     </Routes>
   )
 }
-

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { toApiError } from './apiError'
+import { toApiError } from '@shared/api/apiError'
 
 const REQUEST_TIMEOUT_MS = 10_000
 
@@ -25,4 +25,3 @@ httpClient.interceptors.response.use(
   (response) => response,
   (error: unknown) => Promise.reject(toApiError(error)),
 )
-
