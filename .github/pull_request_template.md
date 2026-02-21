@@ -11,6 +11,5 @@
 -
 
 ## 체크리스트
-- [ ] 로컬 실행 확인 (`npm run dev`)
-- [ ] 로컬 빌드 통과 (`npm run build`)
-- [ ] 타입 체크 통과 (`npm run typecheck`)
+- [ ] 로컬 빌드 통과 (npm run build)
+- [ ] CI 통과 (GitHub Actions CI)
