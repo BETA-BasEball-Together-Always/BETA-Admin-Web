@@ -1,27 +1,43 @@
-import { useNavigate } from 'react-router-dom'
-
 export function DashboardPage() {
-  const navigate = useNavigate()
-
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken')
-    navigate('/login', { replace: true })
-  }
-
   return (
-    <main className="min-h-screen bg-zinc-100 p-8 text-zinc-900">
-      <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
-      <p className="mt-2 text-zinc-700">관리자 대시보드 기본 페이지입니다.</p>
+    <section className="admin-page">
+      <header className="admin-page-header">
+        <h1 className="page-title">대시보드</h1>
+        <p className="page-subtitle">좌측 메뉴를 누르면 오른쪽 콘텐츠 영역만 교체됩니다.</p>
+      </header>
 
-      <div className="mt-6">
-        <button
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-50"
-          onClick={handleLogout}
-          type="button"
-        >
-          로그아웃
-        </button>
-      </div>
-    </main>
+      <section className="admin-metric-grid">
+        <article className="surface admin-metric-card">
+          <p className="admin-metric-label">총 회원 수</p>
+          <p className="admin-metric-value">12,456</p>
+          <p className="admin-metric-delta text-green-500">+234</p>
+        </article>
+        <article className="surface admin-metric-card">
+          <p className="admin-metric-label">오늘 게시물</p>
+          <p className="admin-metric-value">89</p>
+          <p className="admin-metric-delta text-green-500">+23</p>
+        </article>
+        <article className="surface admin-metric-card">
+          <p className="admin-metric-label">처리 대기 신고</p>
+          <p className="admin-metric-value">5</p>
+          <p className="admin-metric-delta text-red-400">-2</p>
+        </article>
+        <article className="surface admin-metric-card">
+          <p className="admin-metric-label">활성 채널</p>
+          <p className="admin-metric-value">8</p>
+          <p className="admin-metric-delta text-green-500">+1</p>
+        </article>
+      </section>
+
+      <article className="surface admin-feed-panel">
+        <h2 className="admin-feed-title">실시간 피드 모니터링</h2>
+        <p className="page-subtitle">
+          TODO : 실제 API 연결 후 목록/필터/페이징을 이 영역에 붙이기
+        </p>
+        <div className="surface-muted admin-feed-placeholder">
+          <p className="text-muted">피드 리스트 자리</p>
+        </div>
+      </article>
+    </section>
   )
 }
