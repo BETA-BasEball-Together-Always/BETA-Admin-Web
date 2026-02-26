@@ -51,7 +51,7 @@ export function LoginPage() {
             테스트 로그인
           </button>
         </form>
-      </section>˚
+      </section>
     </main>
   )
 }
