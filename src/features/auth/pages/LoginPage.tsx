@@ -14,7 +14,7 @@ export function LoginPage() {
     <main className="app-page flex items-center justify-center">
       <section className="surface w-full max-w-md p-6 md:p-8">
         <h1 className="page-title auth-title">
-          <span className="auth-title-main">BETA</span>
+          <span className="auth-title-main">BETA CD TEST</span>
           <span className="auth-title-sub">Admin Login</span>
         </h1>
 
@@ -51,7 +51,7 @@ export function LoginPage() {
             테스트 로그인
           </button>
         </form>
-      </section>
+      </section>˚
     </main>
   )
 }
