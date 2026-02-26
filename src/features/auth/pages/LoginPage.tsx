@@ -7,7 +7,7 @@ export function LoginPage() {
   const handleLogin = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     localStorage.setItem('accessToken', 'dummy-admin-token')
-    navigate('/admin', { replace: true })
+    navigate('/', { replace: true })
   }
 
   return (

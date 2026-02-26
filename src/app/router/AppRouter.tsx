@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { RequireAuth } from './RequireAuth'
-import { RootRedirect } from './RootRedirect'
 import { AdminLayout } from '@features/admin/layouts/AdminLayout'
 import { AdminSectionPage } from '@features/admin/pages/AdminSectionPage'
 import { DashboardPage } from '@features/admin/pages/DashboardPage'
@@ -9,10 +8,9 @@ import { LoginPage } from '@features/auth/pages/LoginPage'
 export function AppRouter() {
   return (
     <Routes>
-      <Route path="/" element={<RootRedirect />} />
       <Route path="/login" element={<LoginPage />} />
       <Route
-        path="/admin"
+        path="/"
         element={
           <RequireAuth>
             <AdminLayout />

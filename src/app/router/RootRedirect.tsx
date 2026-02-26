@@ -6,7 +6,6 @@ function hasAccessToken() {
 
 export function RootRedirect() {
   return hasAccessToken()
-    ? <Navigate to="/admin" replace />
+    ? <Navigate to="/" replace />
     : <Navigate to="/login" replace />
 }
-
