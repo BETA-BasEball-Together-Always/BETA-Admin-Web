@@ -40,7 +40,25 @@ BETA 관리자용 웹 프론트엔드 레포지토리 입니다.
 
 ## CI
 - GitHub Actions: `.github/workflows/ci.yml`
-- 실행 항목:
+- 목적
+  - PR/merge 전에 프론트 코드 품질과 빌드 가능 여부를 자동 검증합니다.
+- 실행 시점
+  - `pull_request` (to `main`)
+  - `push` (`main`, `setting`)
+- 실행 항목
   - `npm ci`
   - `npm run lint`
   - `npm run build`
+- 성공 기준
+  - lint와 build가 모두 통과해야 합니다.
+
+## CD
+- GitHub Actions: `.github/workflows/cd.yml`
+- 목적
+  - `main`의 최신 코드를 빌드해 운영 정적 파일 경로에 자동 반영합니다.
+- 트리거
+  - `main` 브랜치에서 실행된 `CI`가 성공으로 완료된 경우(`workflow_run`)
+- 배포 항목
+  - `npm ci`
+  - `npm run build`
+  - `dist`를 `proxy-vm`으로 업로드 후 `/var/www/admin` 반영
