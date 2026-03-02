@@ -31,8 +31,28 @@ export function toApiError(error: unknown): ApiError {
     }
   }
 
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    const message = error.message
+    if (typeof message === 'string') {
+      return {
+        status: 'status' in error && typeof error.status === 'number' ? error.status : undefined,
+        code: 'code' in error && typeof error.code === 'string' ? error.code : undefined,
+        message,
+        errors:
+          'errors' in error && Array.isArray(error.errors)
+            ? (error.errors as FieldError[])
+            : undefined,
+      }
+    }
+  }
+
+  if (error instanceof Error && error.message) {
+    return {
+      message: error.message,
+    }
+  }
+
   return {
     message: DEFAULT_ERROR_MESSAGE,
   }
 }
-

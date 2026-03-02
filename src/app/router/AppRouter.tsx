@@ -3,12 +3,14 @@ import { RequireAuth } from './RequireAuth'
 import { AdminLayout } from '@features/admin/layouts/AdminLayout'
 import { AdminSectionPage } from '@features/admin/pages/AdminSectionPage'
 import { DashboardPage } from '@features/admin/pages/DashboardPage'
+import { KakaoCallbackPage } from '@features/auth/pages/KakaoCallbackPage'
 import { LoginPage } from '@features/auth/pages/LoginPage'
 
 export function AppRouter() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/auth/kakao/callback" element={<KakaoCallbackPage />} />
       <Route
         path="/"
         element={

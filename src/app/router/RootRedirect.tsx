@@ -1,11 +1,14 @@
 import { Navigate } from 'react-router-dom'
-
-function hasAccessToken() {
-  return Boolean(localStorage.getItem('accessToken'))
-}
+import { useAuth } from '@app/providers/useAuth'
 
 export function RootRedirect() {
-  return hasAccessToken()
+  const { isLoading, isAuthenticated } = useAuth()
+
+  if (isLoading) {
+    return null
+  }
+
+  return isAuthenticated
     ? <Navigate to="/" replace />
     : <Navigate to="/login" replace />
 }
