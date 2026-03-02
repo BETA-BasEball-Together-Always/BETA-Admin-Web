@@ -209,6 +209,16 @@ a {
   filter: brightness(0.95);
 }
 
+.btn-kakao {
+  background: #fee500;
+  color: #191919;
+  border-color: #f2da00;
+}
+
+.btn-kakao:hover {
+  background: #f2da00;
+}
+
 .btn-neutral {
   border-color: rgb(var(--color-border));
   background: rgb(var(--color-surface));

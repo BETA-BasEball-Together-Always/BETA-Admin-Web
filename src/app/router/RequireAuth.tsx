@@ -1,15 +1,17 @@
 import type { PropsWithChildren } from 'react'
 import { Navigate } from 'react-router-dom'
-
-function hasAccessToken() {
-  return Boolean(localStorage.getItem('accessToken'))
-}
+import { useAuth } from '@app/providers/useAuth'
 
 export function RequireAuth({ children }: PropsWithChildren) {
-  if (!hasAccessToken()) {
+  const { isLoading, isAuthenticated } = useAuth()
+
+  if (isLoading) {
+    return null
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />
   }
 
   return <>{children}</>
 }
-

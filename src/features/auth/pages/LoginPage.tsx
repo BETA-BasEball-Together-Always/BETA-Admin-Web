@@ -1,56 +1,60 @@
-import type { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Navigate } from 'react-router-dom'
+import { useAuth } from '@app/providers/useAuth'
+import { createKakaoAuthorizeUrl } from '@shared/api/adminAuthApi'
+import {
+  createOauthState,
+  saveKakaoOauthState,
+} from '@shared/auth/tokenStorage'
+import { getKakaoOauthConfig } from '@shared/config/authConfig'
 
 export function LoginPage() {
-  const navigate = useNavigate()
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { isAuthenticated, isLoading } = useAuth()
 
-  const handleLogin = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    localStorage.setItem('accessToken', 'dummy-admin-token')
-    navigate('/', { replace: true })
+  if (isLoading) {
+    return null
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />
+  }
+
+  const handleKakaoLogin = () => {
+    const kakaoConfig = getKakaoOauthConfig()
+
+    if (!kakaoConfig) {
+      setErrorMessage('카카오 로그인 환경변수(VITE_KAKAO_REST_API_KEY, VITE_KAKAO_REDIRECT_URI)를 확인해주세요.')
+      return
+    }
+
+    const state = createOauthState()
+    saveKakaoOauthState(state)
+    window.location.href = createKakaoAuthorizeUrl(kakaoConfig, state)
   }
 
   return (
     <main className="app-page flex items-center justify-center">
       <section className="surface w-full max-w-md p-6 md:p-8">
         <h1 className="page-title auth-title">
-          <span className="auth-title-main">BETA CD TEST</span>
+          <span className="auth-title-main">BETA</span>
           <span className="auth-title-sub">Admin Login</span>
         </h1>
 
-        <form className="mt-6 space-y-4" onSubmit={handleLogin}>
-          <div>
-            <label className="form-label" htmlFor="login-id">
-              ID
-            </label>
-            <input
-              autoComplete="username"
-              className="input-base"
-              id="login-id"
-              name="loginId"
-              placeholder="아이디를 입력하세요"
-              type="text"
-            />
-          </div>
+        <p className="page-subtitle mt-3 text-center">
+          관리자 권한의 계정만 로그인할 수 있습니다.
+        </p>
 
-          <div>
-            <label className="form-label" htmlFor="login-password">
-              Password
-            </label>
-            <input
-              autoComplete="current-password"
-              className="input-base"
-              id="login-password"
-              name="password"
-              placeholder="비밀번호를 입력하세요"
-              type="password"
-            />
-          </div>
-
-          <button className="btn-base btn-lg btn-primary w-full" type="submit">
-            테스트 로그인
+        <div className="mt-6 space-y-3">
+          <button className="btn-base btn-lg btn-kakao w-full" onClick={handleKakaoLogin} type="button">
+            관리자 카카오 로그인
           </button>
-        </form>
+          {errorMessage ? (
+            <p className="text-sm text-[rgb(var(--color-danger))]" role="alert">
+              {errorMessage}
+            </p>
+          ) : null}
+        </div>
       </section>
     </main>
   )
