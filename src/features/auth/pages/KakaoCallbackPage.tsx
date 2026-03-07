@@ -28,6 +28,8 @@ export function KakaoCallbackPage() {
   const [state, setState] = useState<CallbackState>(INITIAL_STATE)
 
   useEffect(() => {
+    let cancelled = false
+
     const completeLogin = async () => {
       try {
         const kakaoConfig = getKakaoOauthConfig()
@@ -58,10 +60,19 @@ export function KakaoCallbackPage() {
         }
 
         const kakaoAccessToken = await exchangeKakaoCodeForAccessToken(kakaoConfig, code)
+        if (cancelled) {
+          return
+        }
         const loginResponse = await loginAdminWithKakao(kakaoAccessToken)
+        if (cancelled) {
+          return
+        }
         setAuthenticated(loginResponse.accessToken)
         navigate('/', { replace: true })
       } catch (error) {
+        if (cancelled) {
+          return
+        }
         clearAuthentication()
         const apiError = toApiError(error)
         setState({
@@ -72,6 +83,10 @@ export function KakaoCallbackPage() {
     }
 
     void completeLogin()
+
+    return () => {
+      cancelled = true
+    }
   }, [clearAuthentication, location.search, navigate, setAuthenticated])
 
   return (
