@@ -94,3 +94,14 @@ export async function refreshAdminAccessToken(): Promise<string> {
 
   return data.accessToken
 }
+
+export async function logoutAdmin(): Promise<void> {
+  const logoutPath = resolveAdminPath('/auth/logout')
+  await httpClient.post(
+    logoutPath,
+    {},
+    {
+      withCredentials: true,
+    },
+  )
+}
