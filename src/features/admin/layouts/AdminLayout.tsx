@@ -15,6 +15,8 @@ import {
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useAuth } from '@app/providers/useAuth'
+import { logoutAdmin } from '@shared/api/adminAuthApi'
 
 type AdminMenu = {
   icon: LucideIcon
@@ -40,6 +42,7 @@ type Theme = 'light' | 'dark'
 
 export function AdminLayout() {
   const navigate = useNavigate()
+  const { clearAuthentication } = useAuth()
   const [theme, setTheme] = useState<Theme>(() => {
     const storedTheme = localStorage.getItem(THEME_STORAGE_KEY)
     return storedTheme === 'light' ? 'light' : 'dark'
@@ -53,8 +56,13 @@ export function AdminLayout() {
     document.documentElement.setAttribute('data-theme', theme)
   }, [theme])
 
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken')
+  const handleLogout = async () => {
+    try {
+      await logoutAdmin()
+    } catch {
+      // Even if API logout fails, force local auth state clear.
+    }
+    clearAuthentication()
     navigate('/login', { replace: true })
   }
 
