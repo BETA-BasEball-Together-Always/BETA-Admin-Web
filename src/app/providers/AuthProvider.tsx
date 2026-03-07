@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -21,6 +22,18 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const [status, setStatus] = useState<AuthStatus>('loading')
   const authRevisionRef = useRef(0)
 
+  const setAuthenticated = useCallback((accessToken: string) => {
+    authRevisionRef.current += 1
+    setAccessToken(accessToken)
+    setStatus('authenticated')
+  }, [])
+
+  const clearAuthentication = useCallback(() => {
+    authRevisionRef.current += 1
+    clearAccessToken()
+    setStatus('unauthenticated')
+  }, [])
+
   useEffect(() => {
     let mounted = true
     const requestRevision = ++authRevisionRef.current
@@ -28,15 +41,17 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const bootstrapAuth = async () => {
       try {
         const refreshedAccessToken = await refreshAdminAccessToken()
+        if (!mounted || authRevisionRef.current !== requestRevision) {
+          return
+        }
         setAccessToken(refreshedAccessToken)
-        if (mounted && authRevisionRef.current === requestRevision) {
-          setStatus('authenticated')
-        }
+        setStatus('authenticated')
       } catch {
-        clearAccessToken()
-        if (mounted && authRevisionRef.current === requestRevision) {
-          setStatus('unauthenticated')
+        if (!mounted || authRevisionRef.current !== requestRevision) {
+          return
         }
+        clearAccessToken()
+        setStatus('unauthenticated')
       }
     }
 
@@ -51,18 +66,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
     () => ({
       isLoading: status === 'loading',
       isAuthenticated: status === 'authenticated',
-      setAuthenticated: (accessToken: string) => {
-        authRevisionRef.current += 1
-        setAccessToken(accessToken)
-        setStatus('authenticated')
-      },
-      clearAuthentication: () => {
-        authRevisionRef.current += 1
-        clearAccessToken()
-        setStatus('unauthenticated')
-      },
+      setAuthenticated,
+      clearAuthentication,
     }),
-    [status],
+    [clearAuthentication, setAuthenticated, status],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
