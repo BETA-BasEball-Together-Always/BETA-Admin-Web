@@ -37,6 +37,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     let mounted = true
     const requestRevision = ++authRevisionRef.current
+    const currentPath = typeof window !== 'undefined' ? window.location.pathname : ''
+
+    if (currentPath.endsWith('/auth/kakao/callback')) {
+      return () => {
+        mounted = false
+      }
+    }
 
     const bootstrapAuth = async () => {
       try {
