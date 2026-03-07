@@ -59,8 +59,8 @@ export function AdminLayout() {
   const handleLogout = async () => {
     try {
       await logoutAdmin()
-    } catch {
-      // Even if API logout fails, force local auth state clear.
+    } catch(error) {
+      console.warn('Admin logout API failed', error)
     }
     clearAuthentication()
     navigate('/login', { replace: true })
