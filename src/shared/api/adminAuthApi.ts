@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { httpClient } from '@shared/api/httpClient'
+import { resolveAdminPath } from '@shared/api/adminApiPath'
 import type { KakaoOauthConfig } from '@shared/config/authConfig'
 
 const KAKAO_AUTHORIZE_ENDPOINT = 'https://kauth.kakao.com/oauth/authorize'
@@ -21,11 +22,6 @@ export type AdminLoginResponse = {
 
 type AdminRefreshResponse = {
   accessToken?: string
-}
-
-function resolveAdminPath(path: string): string {
-  const baseUrl = (httpClient.defaults.baseURL ?? '').replace(/\/+$/, '')
-  return baseUrl.endsWith('/admin') ? path : `/admin${path}`
 }
 
 export function createKakaoAuthorizeUrl(config: KakaoOauthConfig, state: string): string {

@@ -10,6 +10,9 @@ on:
       - setting
       - v1/**
 
+permissions:
+  contents: read
+
 jobs:
   build-and-check:
     runs-on: ubuntu-latest
@@ -32,4 +35,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
