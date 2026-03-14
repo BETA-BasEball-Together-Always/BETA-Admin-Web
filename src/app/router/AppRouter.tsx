@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { RequireAuth } from './RequireAuth'
 import { AdminLayout } from '@features/admin/layouts/AdminLayout'
@@ -5,6 +6,11 @@ import { AdminSectionPage } from '@features/admin/pages/AdminSectionPage'
 import { DashboardPage } from '@features/admin/pages/DashboardPage'
 import { KakaoCallbackPage } from '@features/auth/pages/KakaoCallbackPage'
 import { LoginPage } from '@features/auth/pages/LoginPage'
+
+const ChannelOverviewPage = lazy(async () => {
+  const module = await import('@features/admin/pages/ChannelOverviewPage')
+  return { default: module.ChannelOverviewPage }
+})
 
 export function AppRouter() {
   return (
@@ -22,7 +28,11 @@ export function AppRouter() {
         <Route index element={<DashboardPage />} />
         <Route
           path="channels"
-          element={<AdminSectionPage title="채널 관리" description="채널 목록 및 상태를 관리하는 영역입니다." />}
+          element={(
+            <Suspense fallback={null}>
+              <ChannelOverviewPage />
+            </Suspense>
+          )}
         />
         <Route
           path="members"

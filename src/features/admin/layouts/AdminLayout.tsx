@@ -1,10 +1,10 @@
 import {
   Activity,
   AlertCircle,
+  BarChart3,
   Bell,
   ChevronLeft,
   FileText,
-  Hash,
   House,
   LogOut,
   MessageSquare,
@@ -26,8 +26,8 @@ type AdminMenu = {
 }
 
 const ADMIN_MENUS: AdminMenu[] = [
-  { icon: House, label: '홈(대시보드)', to: '/', end: true },
-  { icon: Hash, label: '채널 관리', to: '/channels' },
+  { icon: House, label: '대시보드', to: '/', end: true },
+  { icon: BarChart3, label: '팀별 현황', to: '/channels' },
   { icon: Users, label: '회원 관리', to: '/members' },
   { icon: FileText, label: '게시물 관리', to: '/posts' },
   { icon: MessageSquare, label: '댓글 관리', to: '/comments' },
