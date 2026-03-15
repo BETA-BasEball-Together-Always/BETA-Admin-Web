@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { RequireAuth } from './RequireAuth'
 import { AdminLayout } from '@features/admin/layouts/AdminLayout'
+import { AdminLogPage } from '@features/admin/pages/AdminLogPage'
 import { AdminSectionPage } from '@features/admin/pages/AdminSectionPage'
 import { DashboardPage } from '@features/admin/pages/DashboardPage'
 import { KakaoCallbackPage } from '@features/auth/pages/KakaoCallbackPage'
@@ -55,9 +56,10 @@ export function AppRouter() {
           element={<AdminSectionPage title="공지 관리" description="공지 작성 및 노출 설정을 관리하는 영역입니다." />}
         />
         <Route
-          path="audit-logs"
-          element={<AdminSectionPage title="감사 로그" description="관리자 액션 로그를 확인하는 영역입니다." />}
+          path="logs"
+          element={<AdminLogPage />}
         />
+        <Route path="audit-logs" element={<Navigate to="/logs" replace />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
