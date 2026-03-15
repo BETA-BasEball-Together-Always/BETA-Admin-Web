@@ -31,9 +31,9 @@ const ADMIN_MENUS: AdminMenu[] = [
   { icon: Users, label: '회원 관리', to: '/members' },
   { icon: FileText, label: '게시물 관리', to: '/posts' },
   { icon: MessageSquare, label: '댓글 관리', to: '/comments' },
-  { icon: AlertCircle, label: '신고 관리', to: '/reports' },
-  { icon: Bell, label: '공지 관리', to: '/notices' },
-  { icon: Activity, label: '감사 로그', to: '/audit-logs' },
+  { icon: Activity, label: '조치 이력', to: '/logs' },
+  { icon: AlertCircle, label: '신고 관리 (준비 중)', to: '/reports' },
+  { icon: Bell, label: '공지 관리 (준비 중)', to: '/notices' },
 ]
 
 const SIDEBAR_COLLAPSED_KEY = 'beta-admin-web-sidebar-collapsed'

@@ -10,7 +10,10 @@ import { getKakaoOauthConfig } from '@shared/config/authConfig'
 
 export function LoginPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const { isAuthenticated, isLoading } = useAuth()
+  const {
+    isAuthenticated,
+    isLoading,
+  } = useAuth()
 
   if (isLoading) {
     return null
