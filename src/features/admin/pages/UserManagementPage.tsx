@@ -428,22 +428,24 @@ export function UserManagementPage() {
         </article>
       ) : null}
 
-      <AdminActionReasonModal
-        confirmLabel={actionTarget ? getUserActionLabel(actionTarget.action) : '확인'}
-        errorMessage={userActionMutation.isError ? toApiError(userActionMutation.error).message : null}
-        loading={userActionMutation.isPending}
-        onClose={() => {
-          if (userActionMutation.isPending) {
-            return
-          }
-          userActionMutation.reset()
-          setActionTarget(null)
-        }}
-        onConfirm={handleActionConfirm}
-        open={Boolean(actionTarget)}
-        targetLabel={actionTarget ? `${actionTarget.nickname} (사용자-${actionTarget.userId})` : ''}
-        title={actionTarget ? `사용자 ${getUserActionLabel(actionTarget.action)}` : '사용자 상태 변경'}
-      />
+      {actionTarget ? (
+        <AdminActionReasonModal
+          confirmLabel={getUserActionLabel(actionTarget.action)}
+          errorMessage={userActionMutation.isError ? toApiError(userActionMutation.error).message : null}
+          loading={userActionMutation.isPending}
+          onClose={() => {
+            if (userActionMutation.isPending) {
+              return
+            }
+            userActionMutation.reset()
+            setActionTarget(null)
+          }}
+          onConfirm={handleActionConfirm}
+          open
+          targetLabel={`${actionTarget.nickname} (사용자-${actionTarget.userId})`}
+          title={`사용자 ${getUserActionLabel(actionTarget.action)}`}
+        />
+      ) : null}
     </section>
   )
 }

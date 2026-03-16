@@ -461,22 +461,24 @@ export function CommentManagementPage() {
         </article>
       ) : null}
 
-      <AdminActionReasonModal
-        confirmLabel={actionTarget ? getCommentActionLabel(actionTarget.action) : '확인'}
-        errorMessage={commentActionMutation.isError ? toApiError(commentActionMutation.error).message : null}
-        loading={commentActionMutation.isPending}
-        onClose={() => {
-          if (commentActionMutation.isPending) {
-            return
-          }
-          commentActionMutation.reset()
-          setActionTarget(null)
-        }}
-        onConfirm={handleActionConfirm}
-        open={Boolean(actionTarget)}
-        targetLabel={actionTarget ? `댓글-${actionTarget.commentId}` : ''}
-        title={actionTarget ? `댓글 ${getCommentActionLabel(actionTarget.action)}` : '댓글 상태 변경'}
-      />
+      {actionTarget ? (
+        <AdminActionReasonModal
+          confirmLabel={getCommentActionLabel(actionTarget.action)}
+          errorMessage={commentActionMutation.isError ? toApiError(commentActionMutation.error).message : null}
+          loading={commentActionMutation.isPending}
+          onClose={() => {
+            if (commentActionMutation.isPending) {
+              return
+            }
+            commentActionMutation.reset()
+            setActionTarget(null)
+          }}
+          onConfirm={handleActionConfirm}
+          open
+          targetLabel={`댓글-${actionTarget.commentId}`}
+          title={`댓글 ${getCommentActionLabel(actionTarget.action)}`}
+        />
+      ) : null}
     </section>
   )
 }

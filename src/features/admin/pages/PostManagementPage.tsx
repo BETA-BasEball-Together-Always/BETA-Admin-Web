@@ -501,22 +501,24 @@ export function PostManagementPage() {
         </article>
       ) : null}
 
-      <AdminActionReasonModal
-        confirmLabel={actionTarget ? getPostActionLabel(actionTarget.action) : '확인'}
-        errorMessage={postActionMutation.isError ? toApiError(postActionMutation.error).message : null}
-        loading={postActionMutation.isPending}
-        onClose={() => {
-          if (postActionMutation.isPending) {
-            return
-          }
-          postActionMutation.reset()
-          setActionTarget(null)
-        }}
-        onConfirm={handleActionConfirm}
-        open={Boolean(actionTarget)}
-        targetLabel={actionTarget ? `게시글-${actionTarget.postId}` : ''}
-        title={actionTarget ? `게시글 ${getPostActionLabel(actionTarget.action)}` : '게시글 상태 변경'}
-      />
+      {actionTarget ? (
+        <AdminActionReasonModal
+          confirmLabel={getPostActionLabel(actionTarget.action)}
+          errorMessage={postActionMutation.isError ? toApiError(postActionMutation.error).message : null}
+          loading={postActionMutation.isPending}
+          onClose={() => {
+            if (postActionMutation.isPending) {
+              return
+            }
+            postActionMutation.reset()
+            setActionTarget(null)
+          }}
+          onConfirm={handleActionConfirm}
+          open
+          targetLabel={`게시글-${actionTarget.postId}`}
+          title={`게시글 ${getPostActionLabel(actionTarget.action)}`}
+        />
+      ) : null}
     </section>
   )
 }

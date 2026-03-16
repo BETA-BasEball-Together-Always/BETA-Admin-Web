@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 type AdminActionReasonModalProps = {
   open: boolean
@@ -22,12 +22,6 @@ export function AdminActionReasonModal({
   onConfirm,
 }: AdminActionReasonModalProps) {
   const [reason, setReason] = useState('')
-
-  useEffect(() => {
-    if (!open) {
-      setReason('')
-    }
-  }, [open])
 
   if (!open) {
     return null
