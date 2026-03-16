@@ -18,7 +18,7 @@ export type AdminChannelPeakTeamResponse = {
 export type AdminChannelTeamActivityResponse = {
   teamCode: string
   teamName: string
-  memberCount: number
+  userCount: number
   todayPostCount: number
   todayCommentCount: number
   todayActivityCount: number
@@ -76,7 +76,7 @@ function normalizeTeamActivity(
   return {
     teamCode: team.teamCode,
     teamName: team.teamName,
-    memberCount: team.memberCount ?? 0,
+    userCount: team.userCount ?? 0,
     todayPostCount: team.todayPostCount ?? 0,
     todayCommentCount: team.todayCommentCount ?? 0,
     todayActivityCount: team.todayActivityCount ?? 0,

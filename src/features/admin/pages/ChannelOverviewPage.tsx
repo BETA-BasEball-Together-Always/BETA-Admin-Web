@@ -60,7 +60,7 @@ type SummaryCard = {
 type TeamMemberMetric = {
   teamCode: string
   teamName: string
-  memberCount: number
+  userCount: number
 }
 
 const DEFAULT_CHART_TOKENS: ChartTokens = {
@@ -200,11 +200,11 @@ function buildTeamMemberMetrics(teams: AdminChannelTeamActivityResponse[]): Team
     .map((team) => ({
       teamCode: team.teamCode,
       teamName: team.teamName,
-      memberCount: team.memberCount,
+      userCount: team.userCount,
     }))
     .sort((left, right) => {
-      if (right.memberCount !== left.memberCount) {
-        return right.memberCount - left.memberCount
+      if (right.userCount !== left.userCount) {
+        return right.userCount - left.userCount
       }
 
       return left.teamName.localeCompare(right.teamName, 'ko-KR')
@@ -225,7 +225,7 @@ function buildSummaryCards(
     {
       label: '최다 팬 보유 팀',
       value: topMemberTeam?.teamName ?? '-',
-      helper: topMemberTeam ? formatMemberCount(topMemberTeam.memberCount) : '집계 준비 중',
+      helper: topMemberTeam ? formatMemberCount(topMemberTeam.userCount) : '집계 준비 중',
       icon: Trophy,
     },
     {
@@ -407,7 +407,7 @@ export function ChannelOverviewPage() {
         itemStyle: {
           borderRadius: [0, 10, 10, 0],
         },
-        data: teamMemberMetrics.map((team) => team.memberCount),
+        data: teamMemberMetrics.map((team) => team.userCount),
       },
     ],
   }), [chartTokens, isCompactView, teamMemberMetrics])
@@ -721,7 +721,7 @@ export function ChannelOverviewPage() {
                           </td>
                           <td>
                             <div className="admin-channel-table-metric">
-                              <p className="admin-channel-table-metric-primary">{formatMemberCount(team.memberCount)}</p>
+                              <p className="admin-channel-table-metric-primary">{formatMemberCount(team.userCount)}</p>
                             </div>
                           </td>
                           <td>
@@ -775,14 +775,14 @@ export function ChannelOverviewPage() {
                           ) : null}
                           <span>{team.teamName}</span>
                         </div>
-                        <span className="admin-panel-badge">{formatMemberCount(team.memberCount)}</span>
+                        <span className="admin-panel-badge">{formatMemberCount(team.userCount)}</span>
                       </div>
 
                       <div className="admin-channel-mobile-metrics">
                         <div>
                           <p className="admin-channel-mobile-label">팀 사용자 수</p>
                           <p className="admin-channel-mobile-value">
-                            {formatMemberCount(team.memberCount)}
+                            {formatMemberCount(team.userCount)}
                           </p>
                         </div>
                         <div>
