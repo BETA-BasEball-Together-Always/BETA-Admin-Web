@@ -3,8 +3,11 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { RequireAuth } from './RequireAuth'
 import { AdminLayout } from '@features/admin/layouts/AdminLayout'
 import { AdminLogPage } from '@features/admin/pages/AdminLogPage'
+import { CommentManagementPage } from '@features/admin/pages/CommentManagementPage'
 import { AdminSectionPage } from '@features/admin/pages/AdminSectionPage'
 import { DashboardPage } from '@features/admin/pages/DashboardPage'
+import { PostManagementPage } from '@features/admin/pages/PostManagementPage'
+import { UserManagementPage } from '@features/admin/pages/UserManagementPage'
 import { KakaoCallbackPage } from '@features/auth/pages/KakaoCallbackPage'
 import { LoginPage } from '@features/auth/pages/LoginPage'
 
@@ -35,18 +38,9 @@ export function AppRouter() {
             </Suspense>
           )}
         />
-        <Route
-          path="members"
-          element={<AdminSectionPage title="회원 관리" description="회원 계정 및 권한을 관리하는 영역입니다." />}
-        />
-        <Route
-          path="posts"
-          element={<AdminSectionPage title="게시물 관리" description="게시물 검수/숨김/삭제를 처리하는 영역입니다." />}
-        />
-        <Route
-          path="comments"
-          element={<AdminSectionPage title="댓글 관리" description="댓글 모니터링과 제재 처리를 진행하는 영역입니다." />}
-        />
+        <Route path="members" element={<UserManagementPage />} />
+        <Route path="posts" element={<PostManagementPage />} />
+        <Route path="comments" element={<CommentManagementPage />} />
         <Route
           path="reports"
           element={<AdminSectionPage title="신고 관리" description="신고 접수 건을 확인하고 조치하는 영역입니다." />}

@@ -80,8 +80,8 @@ function buildMetricCards(data: AdminDashboardMetricResponse): MetricCard[] {
   return [
     {
       label: '총 회원 수',
-      value: data.totalMemberCount,
-      delta: data.totalMemberDelta,
+      value: data.totalUserCount,
+      delta: data.totalUserDelta,
       helper: '오늘 기준 증감',
       icon: Users,
     },

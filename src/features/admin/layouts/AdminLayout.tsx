@@ -29,7 +29,7 @@ const ADMIN_MENUS: AdminMenu[] = [
   { icon: House, label: '대시보드', to: '/', end: true },
   { icon: BarChart3, label: '팀별 현황', to: '/channels' },
   { icon: Users, label: '회원 관리', to: '/members' },
-  { icon: FileText, label: '게시물 관리', to: '/posts' },
+  { icon: FileText, label: '게시글 관리', to: '/posts' },
   { icon: MessageSquare, label: '댓글 관리', to: '/comments' },
   { icon: Activity, label: '조치 이력', to: '/logs' },
   { icon: AlertCircle, label: '신고 관리 (준비 중)', to: '/reports' },

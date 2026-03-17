@@ -1,13 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import {
-  CalendarDays,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react'
+import { CalendarDays } from 'lucide-react'
 import { DayPicker } from 'react-day-picker'
 import 'react-day-picker/style.css'
+import { AdminPagination } from '@features/admin/components/AdminPagination'
 import { toApiError } from '@shared/api/apiError'
 import {
   getAdminLogs,
@@ -131,15 +128,15 @@ function AdminLogLoadingState() {
   return (
     <article className="surface admin-log-table-card">
       <div className="admin-log-table-wrapper">
-        <table className="admin-log-table">
+        <table className="admin-members-table admin-management-table admin-log-table-layout">
           <thead>
             <tr>
               <th>번호</th>
-              <th>변경한 관리자</th>
               <th>대상 ID</th>
               <th>액션</th>
+              <th>변경한 관리자</th>
               <th>변경 사유</th>
-              <th>시간</th>
+              <th>조치일시</th>
             </tr>
           </thead>
           <tbody>
@@ -185,61 +182,6 @@ function AdminLogEmptyState() {
   )
 }
 
-type AdminPaginationProps = {
-  currentPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
-}
-
-function AdminPagination({ currentPage, totalPages, onPageChange }: AdminPaginationProps) {
-  const pageNumbers = useMemo(
-    () => Array.from({ length: totalPages }, (_, index) => index),
-    [totalPages],
-  )
-
-  if (totalPages <= 1) {
-    return null
-  }
-
-  return (
-    <nav aria-label="관리자 로그 페이지 이동" className="admin-log-pagination">
-      <button
-        className="btn-base btn-neutral admin-log-pagination-button"
-        disabled={currentPage === 0}
-        onClick={() => onPageChange(currentPage - 1)}
-        type="button"
-      >
-        <ChevronLeft aria-hidden strokeWidth={2} />
-        <span>이전</span>
-      </button>
-
-      <div className="admin-log-pagination-pages">
-        {pageNumbers.map((pageNumber) => (
-          <button
-            aria-current={currentPage === pageNumber ? 'page' : undefined}
-            className={`admin-log-page-button ${currentPage === pageNumber ? 'is-active' : ''}`}
-            key={pageNumber}
-            onClick={() => onPageChange(pageNumber)}
-            type="button"
-          >
-            {pageNumber + 1}
-          </button>
-        ))}
-      </div>
-
-      <button
-        className="btn-base btn-neutral admin-log-pagination-button"
-        disabled={currentPage >= totalPages - 1}
-        onClick={() => onPageChange(currentPage + 1)}
-        type="button"
-      >
-        <span>다음</span>
-        <ChevronRight aria-hidden strokeWidth={2} />
-      </button>
-    </nav>
-  )
-}
-
 type AdminLogDesktopTableProps = {
   items: AdminLogItemResponse[]
   page: number
@@ -249,28 +191,28 @@ type AdminLogDesktopTableProps = {
 
 function AdminLogDesktopTable({ items, page, size, totalCount }: AdminLogDesktopTableProps) {
   return (
-    <div className="admin-log-table-wrapper">
-      <table className="admin-log-table">
+    <div className="admin-members-table-wrapper">
+      <table className="admin-members-table admin-management-table admin-log-table-layout">
         <thead>
           <tr>
             <th>번호</th>
-            <th>변경한 관리자</th>
             <th>대상 ID</th>
             <th>액션</th>
+            <th>변경한 관리자</th>
             <th>변경 사유</th>
-            <th>시간</th>
+            <th>조치일시</th>
           </tr>
         </thead>
         <tbody>
           {items.map((item, index) => (
             <tr key={item.logId}>
-              <td className="admin-log-number-cell">{totalCount - (page * size + index)}</td>
-              <td className="admin-log-admin-cell">{item.actorAdminNickname}</td>
+              <td className="admin-management-number-cell">{totalCount - (page * size + index)}</td>
               <td>{resolveTargetLabel(item.targetType, item.targetId)}</td>
               <td>
                 <span className="admin-log-action-badge">{resolveActionLabel(item.action)}</span>
               </td>
-              <td className="admin-log-reason-cell">{item.reason ?? '-'}</td>
+              <td>{item.actorAdminNickname}</td>
+              <td className="admin-management-content-cell admin-log-reason-cell">{item.reason ?? '-'}</td>
               <td>{formatAdminLogDateTime(item.createdAt)}</td>
             </tr>
           ))}
@@ -282,22 +224,22 @@ function AdminLogDesktopTable({ items, page, size, totalCount }: AdminLogDesktop
 
 function AdminLogMobileList({ items }: { items: AdminLogItemResponse[] }) {
   return (
-    <div className="admin-log-mobile-list">
+    <div className="admin-members-mobile-list admin-log-mobile-list">
       {items.map((item) => (
-        <article className="admin-log-mobile-item" key={item.logId}>
-          <div className="admin-log-mobile-header">
-            <div>
-              <p className="admin-log-mobile-time">{formatAdminLogDateTime(item.createdAt)}</p>
-              <p className="admin-log-mobile-admin">{item.actorAdminNickname}</p>
+        <article className="admin-members-mobile-item admin-log-mobile-item" key={item.logId}>
+          <div className="admin-members-mobile-header admin-log-mobile-header">
+            <div className="admin-members-mobile-title-group">
+              <p className="admin-members-name">{item.actorAdminNickname}</p>
+              <p className="admin-members-mobile-email">{formatAdminLogDateTime(item.createdAt)}</p>
             </div>
             <span className="admin-log-action-badge">{resolveActionLabel(item.action)}</span>
           </div>
 
-          <div className="admin-log-mobile-meta">
-            <span className="admin-log-mobile-chip">{resolveTargetLabel(item.targetType, item.targetId)}</span>
+          <div className="admin-members-mobile-chip-row admin-log-mobile-meta">
+            <span className="admin-members-mobile-chip admin-log-mobile-chip">{resolveTargetLabel(item.targetType, item.targetId)}</span>
           </div>
 
-          <p className="admin-log-mobile-reason">{item.reason ?? '변경 사유 없음'}</p>
+          <p className="admin-management-mobile-content admin-log-mobile-reason">{item.reason ?? '변경 사유 없음'}</p>
         </article>
       ))}
     </div>
@@ -386,19 +328,15 @@ export function AdminLogPage() {
   }, [openDatePicker])
 
   return (
-    <section className="admin-page admin-log-page">
-      <header className="admin-page-header admin-log-page-header">
+    <section className="admin-page admin-members-page admin-log-page">
+      <header className="admin-page-header">
         <div className="admin-log-header-row">
           <h1 className="page-title admin-page-title">조치 이력</h1>
         </div>
       </header>
 
-      <article className="surface admin-log-controls">
+      <article className="surface admin-members-controls admin-log-controls">
         <form className="admin-log-controls-form" onSubmit={handleApplyFilters}>
-          <div className="admin-log-controls-meta-row">
-            <p className="admin-log-controls-meta">{totalCountLabel}</p>
-          </div>
-
           <div className="admin-log-control-row admin-log-control-row-period">
             <div className="admin-log-control-block admin-log-control-block-period">
               <p className="form-label admin-log-filter-label">기간 검색</p>
@@ -455,7 +393,7 @@ export function AdminLogPage() {
 
                 <div className="admin-log-controls-actions">
                   <button className="btn-base btn-primary admin-log-submit-button" disabled={hasInvalidDateRange} type="submit">
-                    조회
+                    검색
                   </button>
                 </div>
               </div>
@@ -479,6 +417,10 @@ export function AdminLogPage() {
               </div>
             </div>
           </div>
+
+          <div className="admin-members-controls-footer">
+            <p className="admin-members-controls-meta">{totalCountLabel}</p>
+          </div>
         </form>
 
         {hasInvalidDateRange ? (
@@ -496,13 +438,13 @@ export function AdminLogPage() {
       ) : null}
 
       {!adminLogsQuery.isPending && !adminLogsQuery.isError && adminLogs.length === 0 ? (
-        <article className="surface admin-log-table-card">
+        <article className="surface admin-members-table-card admin-log-table-card">
           <AdminLogEmptyState />
         </article>
       ) : null}
 
       {!adminLogsQuery.isPending && !adminLogsQuery.isError && adminLogs.length > 0 ? (
-        <article className="surface admin-log-table-card">
+        <article className="surface admin-members-table-card admin-log-table-card">
           <AdminLogDesktopTable
             items={adminLogs}
             page={page}
@@ -511,12 +453,12 @@ export function AdminLogPage() {
           />
           <AdminLogMobileList items={adminLogs} />
 
-          <div className="admin-log-footer">
-            <div aria-hidden className="admin-log-footer-spacer" />
-            <div className="admin-log-footer-pagination">
+          <div className="admin-management-footer">
+            <div aria-hidden className="admin-management-footer-spacer" />
+            <div className="admin-management-footer-pagination">
               <AdminPagination currentPage={page} onPageChange={setPage} totalPages={totalPages} />
             </div>
-            <p className="admin-log-footer-meta">
+            <p className="admin-management-footer-meta">
               현재 페이지 {page + 1} / {Math.max(totalPages, 1)}
             </p>
           </div>

@@ -2,8 +2,8 @@ import { httpClient } from '@shared/api/httpClient'
 import { resolveAdminPath } from '@shared/api/adminApiPath'
 
 export type AdminDashboardMetricResponse = {
-  totalMemberCount: number
-  totalMemberDelta: number
+  totalUserCount: number
+  totalUserDelta: number
   todayPostCount: number
   todayPostDelta: number
   todayNewSignupCount: number
