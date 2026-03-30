@@ -1,64 +1,58 @@
 # BETA-Admin-Web
 
-BETA 관리자용 웹 프론트엔드 레포지토리 입니다.
+BETA 관리자 웹 프론트엔드 레포지토리입니다.
 
-## Tech Stack
+운영진이 서비스 현황을 확인하고 회원, 게시글, 댓글, 관리자 조치 이력을 관리할 수 있는 웹 애플리케이션입니다. `BETA-Backend-Server`의 `admin-server`와 연동되며, 운영 환경에서는 빌드된 `dist`가 Nginx를 통해 `/admin` 경로로 서빙됩니다.
+
+## Stack
 - React 19
-- TypeScript (strict)
+- TypeScript
 - Vite 7
-- React Router DOM
+- React Router
+- TanStack Query
 - Axios
-- TanStack Query (React Query)
 - Tailwind CSS v4
-- ESLint
 
-## Context
-- 백엔드 레포지토리: `BETA-Backend-Server`
-- 백엔드 멀티모듈에 `admin-server`가 `user-server`처럼 추가되는 구조를 고려해 API 계층을 분리해 개발합니다.
+## Features
+- Kakao 기반 관리자 로그인
+- 대시보드
+- 팀별 현황
+- 회원 관리
+- 게시글 관리
+- 댓글 관리
+- 조치 이력 조회
+- 신고/공지 관리 페이지는 준비 중
 
+## Local Development
 
-## Current Setup
-- 라우팅
-  - `/`: `RootRedirect` (토큰 유무에 따라 분기)
-  - `/login`: `LoginPage`
-  - `/admin`: `RequireAuth`로 보호된 `DashboardPage`
-- 임시 인증 가드
-  - `localStorage`의 `accessToken` 기준으로 접근 제어
-- API 인프라
-  - `src/shared/api/httpClient.ts`: axios 공통 인스턴스/토큰 주입/timeout
-  - `src/shared/api/apiError.ts`: 백엔드 에러 응답 공통 변환
-- 서버 상태 관리
-  - `src/shared/query/queryClient.ts`
-  - `src/app/providers/QueryProvider.tsx`
-- 경로 alias
-  - `@app/*`, `@features/*`, `@shared/*`
+```bash
+npm install
+npm run dev
+```
 
-## Environment
+환경 변수:
 - `VITE_API_BASE_URL`
-- 로컬 개발 기준 예시:
-  - `VITE_API_BASE_URL=http://localhost:8080/api/v1`
+- `VITE_KAKAO_REST_API_KEY`
+- `VITE_KAKAO_REDIRECT_URI`
 
-## CI
-- GitHub Actions: `.github/workflows/ci.yml`
-- 목적
-  - PR/merge 전에 프론트 코드 품질과 빌드 가능 여부를 자동 검증합니다.
-- 실행 시점
-  - `pull_request` (to `main`)
-  - `push` (`main`, `setting`)
-- 실행 항목
-  - `npm ci`
-  - `npm run lint`
-  - `npm run build`
-- 성공 기준
-  - lint와 build가 모두 통과해야 합니다.
+예시:
+```env
+VITE_API_BASE_URL=http://localhost:8080/api/v1
+VITE_KAKAO_REST_API_KEY=your_kakao_rest_api_key
+VITE_KAKAO_REDIRECT_URI=http://localhost:5173/admin/auth/kakao/callback
+```
 
-## CD
-- GitHub Actions: `.github/workflows/cd.yml`
-- 목적
-  - `main`의 최신 코드를 빌드해 운영 정적 파일 경로에 자동 반영합니다.
-- 트리거
-  - `main` 브랜치에서 실행된 `CI`가 성공으로 완료된 경우(`workflow_run`)
-- 배포 항목
-  - `npm ci`
-  - `npm run build`
-  - `dist`를 `proxy-vm`으로 업로드 후 `/var/www/admin` 반영
+`VITE_API_BASE_URL`은 `/api/v1/admin` 또는 `http://localhost:8080/api/v1` 형태로 사용할 수 있습니다. 관리자 API 경로는 앱 내부에서 `/admin` 기준으로 정리됩니다.
+
+## Build
+
+```bash
+npm run build
+npm run preview
+```
+
+## Deployment
+
+- CI는 `pull_request`와 `push`에서 lint와 build를 확인합니다.
+- CD는 `main` 기준 빌드 결과물 `dist`를 서버로 배포합니다.
+- 운영 환경에서는 Nginx가 `/var/www/admin`의 정적 파일을 `/admin` 경로로 서빙합니다.
