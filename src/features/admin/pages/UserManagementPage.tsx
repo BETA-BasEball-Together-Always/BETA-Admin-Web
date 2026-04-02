@@ -75,24 +75,6 @@ function getUserStatusClassName(status: AdminUserStatus): string {
   return 'admin-members-status-badge admin-members-status-withdrawn'
 }
 
-function formatGenderAge(item: AdminUserItemResponse): string {
-  const parts: string[] = []
-
-  if (item.gender === 'M') {
-    parts.push('남성')
-  }
-
-  if (item.gender === 'F') {
-    parts.push('여성')
-  }
-
-  if (item.age !== null) {
-    parts.push(`${item.age}세`)
-  }
-
-  return parts.length > 0 ? parts.join(' · ') : '-'
-}
-
 function UserManagementLoadingState() {
   return (
     <article className="surface admin-members-table-card">
@@ -105,7 +87,6 @@ function UserManagementLoadingState() {
               <th>닉네임</th>
               <th>이메일</th>
               <th>응원 팀</th>
-              <th>성별/나이</th>
               <th>소개</th>
               <th>가입일시</th>
               <th>상태</th>
@@ -115,7 +96,7 @@ function UserManagementLoadingState() {
           <tbody>
             {Array.from({ length: 5 }, (_, index) => (
               <tr key={index}>
-                {Array.from({ length: 10 }, (_, cellIndex) => (
+                {Array.from({ length: 9 }, (_, cellIndex) => (
                   <td key={cellIndex}>
                     <div className="admin-skeleton admin-members-skeleton-text" />
                   </td>
@@ -308,7 +289,6 @@ export function UserManagementPage() {
                   <th>닉네임</th>
                   <th>이메일</th>
                   <th>응원 팀</th>
-                  <th>성별/나이</th>
                   <th>소개</th>
                   <th>가입일시</th>
                   <th>상태</th>
@@ -333,7 +313,6 @@ export function UserManagementPage() {
                         <span className="admin-members-table-truncated">{item.email}</span>
                       </td>
                       <td>{item.favoriteTeamName ?? '-'}</td>
-                      <td>{formatGenderAge(item)}</td>
                       <td
                         className="admin-management-content-cell admin-management-content-truncated"
                         title={item.bio ?? '-'}
@@ -394,7 +373,6 @@ export function UserManagementPage() {
                   <div className="admin-members-mobile-chip-row">
                     <span className="admin-members-mobile-chip">{`ID ${item.userId}`}</span>
                     <span className="admin-members-mobile-chip">{item.favoriteTeamName ?? '응원 팀 없음'}</span>
-                    <span className="admin-members-mobile-chip">{formatGenderAge(item)}</span>
                     <span className="admin-members-mobile-chip">{formatDateTime(item.joinedAt)}</span>
                   </div>
 

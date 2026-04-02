@@ -1400,7 +1400,6 @@ a {
 
 .admin-members-table-truncated {
   display: block;
-  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1439,42 +1438,37 @@ a {
 
 .admin-users-table th:nth-child(3),
 .admin-users-table td:nth-child(3) {
-  width: 10%;
+  width: 13%;
 }
 
 .admin-users-table th:nth-child(4),
 .admin-users-table td:nth-child(4) {
-  width: 17%;
+  width: 20%;
 }
 
 .admin-users-table th:nth-child(5),
 .admin-users-table td:nth-child(5) {
-  width: 10%;
+  width: 11%;
 }
 
 .admin-users-table th:nth-child(6),
 .admin-users-table td:nth-child(6) {
-  width: 11%;
+  width: 17%;
 }
 
 .admin-users-table th:nth-child(7),
 .admin-users-table td:nth-child(7) {
-  width: 16%;
+  width: 11%;
 }
 
 .admin-users-table th:nth-child(8),
 .admin-users-table td:nth-child(8) {
-  width: 10%;
+  width: 6%;
 }
 
 .admin-users-table th:nth-child(9),
 .admin-users-table td:nth-child(9) {
-  width: 6%;
-}
-
-.admin-users-table th:nth-child(10),
-.admin-users-table td:nth-child(10) {
-  width: 6%;
+  width: 8%;
 }
 
 .admin-posts-table th:nth-child(1),
