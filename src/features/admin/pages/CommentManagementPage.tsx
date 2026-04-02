@@ -173,7 +173,6 @@ function CommentManagementEmptyState() {
   return (
     <div className="admin-feed-placeholder admin-log-empty-state">
       <div>
-        <p className="admin-placeholder-title">댓글 관리</p>
         <p className="text-muted">조건에 맞는 댓글이 없습니다.</p>
       </div>
     </div>

@@ -1398,6 +1398,14 @@ a {
   font-weight: 600;
 }
 
+.admin-members-table-truncated {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .admin-management-number-cell {
   font-weight: 700;
 }
@@ -1556,8 +1564,6 @@ a {
 
 .admin-members-table-email-cell {
   color: rgb(var(--color-text-muted));
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .admin-members-name {

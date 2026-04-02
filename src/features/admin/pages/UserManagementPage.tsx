@@ -151,7 +151,6 @@ function UserManagementEmptyState() {
   return (
     <div className="admin-feed-placeholder admin-log-empty-state">
       <div>
-        <p className="admin-placeholder-title">회원 관리</p>
         <p className="text-muted">조건에 맞는 사용자가 없습니다.</p>
       </div>
     </div>
@@ -327,7 +326,12 @@ export function UserManagementPage() {
                       </td>
                       <td>{item.userId}</td>
                       <td>{item.nickname}</td>
-                      <td className="admin-management-muted-cell">{item.email}</td>
+                      <td
+                        className="admin-management-muted-cell admin-members-table-email-cell"
+                        title={item.email}
+                      >
+                        <span className="admin-members-table-truncated">{item.email}</span>
+                      </td>
                       <td>{item.favoriteTeamName ?? '-'}</td>
                       <td>{formatGenderAge(item)}</td>
                       <td
