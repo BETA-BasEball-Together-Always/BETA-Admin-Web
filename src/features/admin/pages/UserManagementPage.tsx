@@ -330,7 +330,12 @@ export function UserManagementPage() {
                       <td className="admin-management-muted-cell">{item.email}</td>
                       <td>{item.favoriteTeamName ?? '-'}</td>
                       <td>{formatGenderAge(item)}</td>
-                      <td className="admin-management-content-cell">{item.bio ?? '-'}</td>
+                      <td
+                        className="admin-management-content-cell admin-management-content-truncated"
+                        title={item.bio ?? '-'}
+                      >
+                        {item.bio ?? '-'}
+                      </td>
                       <td>{formatDateTime(item.joinedAt)}</td>
                       <td>
                         <span className={getUserStatusClassName(item.status)}>
