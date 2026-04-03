@@ -16,6 +16,11 @@ const ChannelOverviewPage = lazy(async () => {
   return { default: module.ChannelOverviewPage }
 })
 
+const PostDetailPage = lazy(async () => {
+  const module = await import('@features/admin/pages/PostDetailPage')
+  return { default: module.PostDetailPage }
+})
+
 export function AppRouter() {
   return (
     <Routes>
@@ -40,6 +45,14 @@ export function AppRouter() {
         />
         <Route path="members" element={<UserManagementPage />} />
         <Route path="posts" element={<PostManagementPage />} />
+        <Route
+          path="posts/:postId"
+          element={(
+            <Suspense fallback={null}>
+              <PostDetailPage />
+            </Suspense>
+          )}
+        />
         <Route path="comments" element={<CommentManagementPage />} />
         <Route
           path="reports"

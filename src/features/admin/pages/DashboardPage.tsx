@@ -8,6 +8,7 @@ import {
   Users,
 } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 import {
   getAdminDashboard,
   type AdminDashboardMetricResponse,
@@ -168,6 +169,7 @@ function DashboardErrorState({ message, onRetry }: DashboardErrorStateProps) {
 }
 
 export function DashboardPage() {
+  const navigate = useNavigate()
   const dashboardQuery = useQuery({
     queryKey: DASHBOARD_QUERY_KEY,
     queryFn: getAdminDashboard,
@@ -178,6 +180,10 @@ export function DashboardPage() {
     () => (dashboardQuery.data ? buildMetricCards(dashboardQuery.data) : []),
     [dashboardQuery.data],
   )
+
+  const handleFeedOpen = (postId: number) => {
+    navigate(`/posts/${postId}`)
+  }
 
   return (
     <section className="admin-page">
@@ -230,7 +236,22 @@ export function DashboardPage() {
                         const teamLogo = getTeamLogoByCode(feed.channel)
 
                         return (
-                          <article className="surface-muted admin-feed-item" key={feed.postId}>
+                          <article
+                            aria-label={`게시글 ${feed.postId} 상세 보기`}
+                            className="surface-muted admin-feed-item admin-feed-item-clickable"
+                            key={feed.postId}
+                            onClick={() => handleFeedOpen(feed.postId)}
+                            onKeyDown={(event) => {
+                              if (event.key !== 'Enter' && event.key !== ' ') {
+                                return
+                              }
+
+                              event.preventDefault()
+                              handleFeedOpen(feed.postId)
+                            }}
+                            role="link"
+                            tabIndex={0}
+                          >
                             <div className="admin-feed-item-main">
                               <div className="admin-feed-meta-row">
                                 {teamLogo ? (
