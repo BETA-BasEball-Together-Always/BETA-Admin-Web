@@ -1216,6 +1216,11 @@ a {
   border-radius: var(--radius-md);
 }
 
+.admin-user-stats-badge-skeleton {
+  width: 6.5rem;
+  height: 1.75rem;
+}
+
 .admin-members-page > * + * {
   margin-top: 0.875rem;
 }
@@ -2417,4 +2422,5 @@ a {
   .admin-channel-mobile-value {
     text-align: center;
   }
+
 }
