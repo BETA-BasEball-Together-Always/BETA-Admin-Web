@@ -1,7 +1,7 @@
 import { Search } from 'lucide-react'
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AdminActionReasonModal } from '@features/admin/components/AdminActionReasonModal'
 import { AdminPagination } from '@features/admin/components/AdminPagination'
 import { toApiError } from '@shared/api/apiError'
@@ -197,6 +197,7 @@ function PostManagementEmptyState() {
 type PostManagementTableProps = {
   items: AdminPostItemResponse[]
   onActionOpen: (target: PostActionTarget) => void
+  onPostOpen: (postId: number) => void
   page: number
   size: number
   totalCount: number
@@ -205,6 +206,7 @@ type PostManagementTableProps = {
 function PostManagementDesktopTable({
   items,
   onActionOpen,
+  onPostOpen,
   page,
   size,
   totalCount,
@@ -229,7 +231,22 @@ function PostManagementDesktopTable({
             const action = getPostAction(item)
 
             return (
-              <tr key={item.postId}>
+              <tr
+                aria-label={`게시글 ${item.postId} 상세 보기`}
+                className="admin-post-row-clickable"
+                key={item.postId}
+                onClick={() => onPostOpen(item.postId)}
+                onKeyDown={(event) => {
+                  if (event.key !== 'Enter' && event.key !== ' ') {
+                    return
+                  }
+
+                  event.preventDefault()
+                  onPostOpen(item.postId)
+                }}
+                role="link"
+                tabIndex={0}
+              >
                 <td className="admin-management-number-cell">
                   {totalCount - (page * size + index)}
                 </td>
@@ -249,7 +266,10 @@ function PostManagementDesktopTable({
                   {action ? (
                     <button
                       className="btn-base btn-neutral admin-management-action-button"
-                      onClick={() => onActionOpen({ action, postId: item.postId })}
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        onActionOpen({ action, postId: item.postId })
+                      }}
                       type="button"
                     >
                       {getPostActionLabel(action)}
@@ -270,9 +290,11 @@ function PostManagementDesktopTable({
 function PostManagementMobileList({
   items,
   onActionOpen,
+  onPostOpen,
 }: {
   items: AdminPostItemResponse[]
   onActionOpen: (target: PostActionTarget) => void
+  onPostOpen: (postId: number) => void
 }) {
   return (
     <div className="admin-members-mobile-list">
@@ -280,7 +302,22 @@ function PostManagementMobileList({
         const action = getPostAction(item)
 
         return (
-          <article className="admin-members-mobile-item" key={item.postId}>
+          <article
+            aria-label={`게시글 ${item.postId} 상세 보기`}
+            className="admin-members-mobile-item admin-post-card-clickable"
+            key={item.postId}
+            onClick={() => onPostOpen(item.postId)}
+            onKeyDown={(event) => {
+              if (event.key !== 'Enter' && event.key !== ' ') {
+                return
+              }
+
+              event.preventDefault()
+              onPostOpen(item.postId)
+            }}
+            role="link"
+            tabIndex={0}
+          >
             <div className="admin-members-mobile-header">
               <div className="admin-members-mobile-title-group">
                 <p className="admin-members-name">{`게시글-${item.postId}`}</p>
@@ -306,7 +343,10 @@ function PostManagementMobileList({
               {action ? (
                 <button
                   className="btn-base btn-neutral admin-management-action-button"
-                  onClick={() => onActionOpen({ action, postId: item.postId })}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    onActionOpen({ action, postId: item.postId })
+                  }}
                   type="button"
                 >
                   {getPostActionLabel(action)}
@@ -323,6 +363,7 @@ function PostManagementMobileList({
 }
 
 export function PostManagementPage() {
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [searchParams] = useSearchParams()
   const [page, setPage] = useState(0)
@@ -387,6 +428,10 @@ export function PostManagementPage() {
       ...actionTarget,
       reason,
     })
+  }
+
+  const handlePostOpen = (postId: number) => {
+    navigate(`/posts/${postId}`)
   }
 
   return (
@@ -476,6 +521,7 @@ export function PostManagementPage() {
               postActionMutation.reset()
               setActionTarget(target)
             }}
+            onPostOpen={handlePostOpen}
             page={page}
             size={POSTS_PAGE_SIZE}
             totalCount={totalCount}
@@ -486,6 +532,7 @@ export function PostManagementPage() {
               postActionMutation.reset()
               setActionTarget(target)
             }}
+            onPostOpen={handlePostOpen}
           />
 
           <div className="admin-management-footer">

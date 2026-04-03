@@ -28,6 +28,7 @@ flowchart TD
   H --> E["ChannelOverviewPage"]
   H --> F["UserManagementPage"]
   H --> J["PostManagementPage"]
+  H --> PD["PostDetailPage"]
   H --> K["CommentManagementPage"]
   H --> I["AdminLogPage"]
 
@@ -78,6 +79,7 @@ src
 │        ├─ ChannelOverviewPage.tsx
 │        ├─ UserManagementPage.tsx
 │        ├─ PostManagementPage.tsx
+│        ├─ PostDetailPage.tsx
 │        ├─ CommentManagementPage.tsx
 │        └─ AdminLogPage.tsx
 └─ shared
