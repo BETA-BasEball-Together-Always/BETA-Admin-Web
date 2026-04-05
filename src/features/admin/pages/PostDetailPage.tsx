@@ -15,19 +15,20 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { toApiError } from '@shared/api/apiError'
 import {
-  getCommunityPostComments,
-  getCommunityPostDetail,
-  type CommunityPostCommentResponse,
-  type CommunityPostEmotionCountResponse,
-  type CommunityPostImageResponse,
-  type CommunityPostReplyResponse,
-} from '@shared/api/communityPostDetailApi'
+  getAdminPostComments,
+  getAdminPostDetail,
+  type AdminPostCommentResponse,
+  type AdminPostEmotionCountResponse,
+  type AdminPostImageResponse,
+  type AdminPostReplyResponse,
+  type AdminPostStatus,
+} from '@shared/api/adminPostApi'
 import { getTeamLogoByCode } from '@shared/team/teamLogo'
 
 const numberFormatter = new Intl.NumberFormat('ko-KR')
 
 type ReactionCard = {
-  key: keyof CommunityPostEmotionCountResponse
+  key: keyof AdminPostEmotionCountResponse
   label: string
   icon: LucideIcon
   count: number
@@ -68,13 +69,49 @@ function normalizeHashtag(hashtag: string): string {
   return hashtag.startsWith('#') ? hashtag.slice(1) : hashtag
 }
 
-function getReactionCards(emotions: CommunityPostEmotionCountResponse): ReactionCard[] {
+function getReactionCards(emotions: AdminPostEmotionCountResponse): ReactionCard[] {
   return [
     { key: 'likeCount', label: 'like', icon: Heart, count: emotions.likeCount },
     { key: 'sadCount', label: 'sad', icon: Frown, count: emotions.sadCount },
     { key: 'funCount', label: 'fun', icon: Smile, count: emotions.funCount },
     { key: 'hypeCount', label: 'hype', icon: Flame, count: emotions.hypeCount },
   ]
+}
+
+function getPostStatusLabel(status: AdminPostStatus): string {
+  if (status === 'ACTIVE') {
+    return '노출'
+  }
+
+  if (status === 'HIDDEN') {
+    return '숨김'
+  }
+
+  if (status === 'DELETED') {
+    return '삭제'
+  }
+
+  if (status === 'REPORTED') {
+    return '신고 검토'
+  }
+
+  return '대기'
+}
+
+function getPostStatusClassName(status: AdminPostStatus): string {
+  if (status === 'ACTIVE') {
+    return 'admin-members-status-badge admin-members-status-active'
+  }
+
+  if (status === 'REPORTED' || status === 'PENDING') {
+    return 'admin-members-status-badge admin-members-status-warning'
+  }
+
+  if (status === 'HIDDEN') {
+    return 'admin-members-status-badge admin-members-status-suspended'
+  }
+
+  return 'admin-members-status-badge admin-members-status-withdrawn'
 }
 
 function getCommentAuthorName({
@@ -112,8 +149,8 @@ function getCommentMeta({
 }
 
 function hasReplies(
-  comment: CommunityPostCommentResponse | CommunityPostReplyResponse,
-): comment is CommunityPostCommentResponse {
+  comment: AdminPostCommentResponse | AdminPostReplyResponse,
+): comment is AdminPostCommentResponse {
   return 'replies' in comment
 }
 
@@ -121,7 +158,7 @@ function CommentCard({
   comment,
   isReply = false,
 }: {
-  comment: CommunityPostCommentResponse | CommunityPostReplyResponse
+  comment: AdminPostCommentResponse | AdminPostReplyResponse
   isReply?: boolean
 }) {
   return (
@@ -174,7 +211,7 @@ function ImageLightbox({
   image,
   onClose,
 }: {
-  image: CommunityPostImageResponse
+  image: AdminPostImageResponse
   onClose: () => void
 }) {
   return (
@@ -246,17 +283,17 @@ function PostDetailErrorState({
 export function PostDetailPage() {
   const { postId: postIdParam } = useParams()
   const postId = resolvePostId(postIdParam)
-  const [selectedImage, setSelectedImage] = useState<CommunityPostImageResponse | null>(null)
+  const [selectedImage, setSelectedImage] = useState<AdminPostImageResponse | null>(null)
   const [loadedCommentsState, setLoadedCommentsState] = useState<{
     postId: number
-    items: CommunityPostCommentResponse[]
+    items: AdminPostCommentResponse[]
     hasNext: boolean
     nextCursor: number | null
   } | null>(null)
 
   const postDetailQuery = useQuery({
-    queryKey: ['community', 'post-detail', postId ?? 'invalid'],
-    queryFn: () => getCommunityPostDetail(postId as number),
+    queryKey: ['admin', 'posts', 'detail', postId ?? 'invalid'],
+    queryFn: () => getAdminPostDetail(postId as number),
     enabled: postId != null,
     staleTime: 30_000,
   })
@@ -272,7 +309,7 @@ export function PostDetailPage() {
         throw new Error('추가 댓글이 없습니다.')
       }
 
-      return getCommunityPostComments(postId, nextCommentCursor)
+      return getAdminPostComments(postId, nextCommentCursor)
     },
     onSuccess: (response) => {
       if (postId == null) {
@@ -343,7 +380,7 @@ export function PostDetailPage() {
   const comments = [...detail.comments, ...(currentLoadedCommentsState?.items ?? [])]
   const hasNextComments = currentLoadedCommentsState?.hasNext ?? detail.hasNextComments
   const reactionCards = getReactionCards(detail.emotions)
-  const teamLogo = getTeamLogoByCode(detail.author.teamCode) ?? getTeamLogoByCode(detail.channel)
+  const teamLogo = getTeamLogoByCode(detail.author.teamCode ?? '') ?? getTeamLogoByCode(detail.channel)
   const imageGridStyle = {
     '--image-column-count': String(Math.max(detail.images.length, 1)),
   } as CSSProperties
@@ -362,24 +399,27 @@ export function PostDetailPage() {
             <div className="admin-post-detail-author">
               {teamLogo ? (
                 <img
-                  alt={`${detail.author.teamCode} logo`}
+                  alt={`${detail.author.teamCode ?? detail.channel} logo`}
                   className="admin-team-logo admin-post-detail-author-logo"
                   loading="lazy"
                   src={teamLogo}
                 />
               ) : (
-                <span className="admin-channel-badge">{detail.author.teamCode}</span>
+                <span className="admin-channel-badge">{detail.author.teamCode ?? detail.channel}</span>
               )}
 
               <div>
-                <p className="admin-post-detail-author-name">{detail.author.nickname}</p>
+                <p className="admin-post-detail-author-name">{detail.author.nickname ?? '알 수 없음'}</p>
                 <p className="admin-post-detail-author-meta">
-                  {`userId ${detail.author.userId} · ${detail.author.teamCode}`}
+                  {`userId ${detail.author.userId} · ${detail.author.teamCode ?? '팀 미설정'}`}
                 </p>
               </div>
             </div>
 
             <div className="admin-post-detail-meta">
+              <span className={getPostStatusClassName(detail.status)}>
+                {getPostStatusLabel(detail.status)}
+              </span>
               <div className="admin-post-detail-meta-item">
                 <Hash aria-hidden className="admin-post-detail-meta-icon" strokeWidth={2} />
                 <span>{`postId ${detail.postId}`}</span>
