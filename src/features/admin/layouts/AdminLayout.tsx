@@ -9,6 +9,7 @@ import {
   LogOut,
   MessageSquare,
   Moon,
+  Search,
   Sun,
   type LucideIcon,
   Users,
@@ -25,6 +26,12 @@ type AdminMenu = {
   end?: boolean
 }
 
+type AdminExternalTool = {
+  href: string
+  icon: LucideIcon
+  label: string
+}
+
 const ADMIN_MENUS: AdminMenu[] = [
   { icon: House, label: '대시보드', to: '/', end: true },
   { icon: BarChart3, label: '팀별 현황', to: '/channels' },
@@ -34,6 +41,11 @@ const ADMIN_MENUS: AdminMenu[] = [
   { icon: Activity, label: '조치 이력', to: '/logs' },
   { icon: AlertCircle, label: '신고 관리 (준비 중)', to: '/reports' },
   { icon: Bell, label: '공지 관리 (준비 중)', to: '/notices' },
+]
+
+const ADMIN_EXTERNAL_TOOLS: AdminExternalTool[] = [
+  { href: 'https://beta-app.kr/grafana', icon: BarChart3, label: 'Grafana' },
+  { href: 'https://beta-app.kr/kibana', icon: Search, label: 'Kibana' },
 ]
 
 const SIDEBAR_COLLAPSED_KEY = 'beta-admin-web-sidebar-collapsed'
@@ -122,6 +134,23 @@ export function AdminLayout() {
         </nav>
 
         <div className="admin-sidebar-actions">
+          {ADMIN_EXTERNAL_TOOLS.map((tool) => (
+            <a
+              aria-label={`${tool.label} 새 탭에서 열기`}
+              className="btn-base btn-neutral admin-tool-link"
+              href={tool.href}
+              key={tool.href}
+              rel="noreferrer"
+              target="_blank"
+              title={tool.label}
+            >
+              <span aria-hidden className="admin-tool-icon">
+                <tool.icon strokeWidth={2} />
+              </span>
+              <span className="admin-tool-label">{tool.label}</span>
+            </a>
+          ))}
+
           <button
             aria-label={isDarkMode ? '라이트 모드로 변경' : '다크 모드로 변경'}
             className="btn-base btn-neutral admin-theme-toggle"
